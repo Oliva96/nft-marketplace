@@ -11,7 +11,6 @@ import Market from '../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
-
 const CreateItem = () => {
 
     const [fileUrl, setFileUrl] = useState(null);

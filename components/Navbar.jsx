@@ -1,49 +1,40 @@
 import React, { useState } from "react";
-import Navbar from "@material-tailwind/react/Navbar";
-import NavbarContainer from "@material-tailwind/react/NavbarContainer";
-import NavbarWrapper from "@material-tailwind/react/NavbarWrapper";
-import NavbarBrand from "@material-tailwind/react/NavbarBrand";
-import NavbarToggler from "@material-tailwind/react/NavbarToggler";
-import NavbarCollapse from "@material-tailwind/react/NavbarCollapse";
-import Nav from "@material-tailwind/react/Nav";
 import Link from "next/link";
-import { Button } from "@material-tailwind/react";
 
 export default function NavbarHome() {
-  const [openNavbar, setOpenNavbar] = useState(false);
+  // const [openNavbar, setOpenNavbar] = useState(false);
 
   return (
-    <Navbar color="lightBlue" navbar>
-        <NavbarContainer>
-            <NavbarWrapper>
-                <NavbarBrand>Metaverse Marketplace</NavbarBrand>
-                <NavbarToggler
-                    color="white"
-                    onClick={() => setOpenNavbar(!openNavbar)}
-                    ripple="light"
-                />
-            </NavbarWrapper>
-
-            <NavbarCollapse open={openNavbar}>
-                <Nav>
-                  <Link href="/">
-                      <Button active="light" ripple="light">
-                          Home
-                      </Button>
-                  </Link>
-                  <Link href="/create-item">
-                      <Button active="light" ripple="light">
-                        Create Digital Asset
-                      </Button>
-                  </Link>
-                  <Link href="/my-assets">
-                      <Button active="light" ripple="light">
-                        My Digital Assets
-                      </Button>
-                  </Link>
-                </Nav>
-            </NavbarCollapse>
-        </NavbarContainer>
-    </Navbar>
+    <div className="w-full h-20 grid content-center bg-black fixed">
+        <div className="w-full flex items-center justify-between">
+          <Link href='./'>
+            <span className="flex items-center cursor-pointer text-blue-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl" href="#">
+              Metaverse Marketplace
+            </span>
+          </Link>
+          <div className="flex w-1/2 justify-end content-center">
+            <Link href='/marketPlace'>
+              <button className="inline-block text-2xl font-bold text-blue-400 no-underline focus:text-pink-500 focus:scale-125 hover:text-pink-500 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4 transform hover:scale-125 duration-300 ease-in-out">
+                Explore
+              </button>
+            </Link>
+            <Link href='/rankings'>
+              <button className="inline-block text-2xl font-bold text-blue-400 no-underline focus:text-pink-500 focus:scale-125 hover:text-pink-500 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4 transform hover:scale-125 duration-300 ease-in-out">
+                Stats
+              </button>
+            </Link>
+            <Link href='/create-item'>
+              <button className="inline-block text-2xl font-bold text-blue-400 no-underline focus:text-pink-500 focus:scale-125 hover:text-pink-500 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4 transform hover:scale-125 duration-300 ease-in-out">
+                Create
+              </button>
+            </Link>
+            <Link href='/my-assets'>
+              <button className="inline-block text-2xl font-bold text-blue-400 no-underline focus:text-pink-500 focus:scale-125 hover:text-pink-500 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4 transform hover:scale-125 duration-300 ease-in-out">
+                Profile
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
   );
 }

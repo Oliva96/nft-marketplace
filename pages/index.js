@@ -1,99 +1,50 @@
-import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Web3Modal from 'web3modal';
-import { nftAddress, nftMarketAddress} from '../config';
-
-import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
-import Market from '../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 
 export default function Home() {
 
-  const [nfts, setNfts] = useState([]);
-  const [loading, setLoading] = useState('not-loaded');
-
-  useEffect(() => {
-    loadNFTs();
-  }, []);
-
-  const loadNFTs = async () => {
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider);
-    const marketContract = new ethers.Contract(nftMarketAddress, Market.abi, provider);
-  
-    const data = await marketContract.fetchMarketItems();
-  
-    const items = await Promise.all(data.map(async (i) => {
-      const tokenUri = await tokenContract.tokenURI(i.tokenId);
-      const meta = await axios.get(tokenUri);
-
-      let price = i.price.add(i.comission);
-      price = ethers.utils.formatUnits(price.toString(), 'ether');
-      
-      let item = {
-        price: price,
-        tokenId: i.tokenId.toNumber(),
-        createdBy: i.createdBy,
-        owner: i.owner,
-        image: meta.data.image,
-        name: meta.data.name,
-        description: meta.data.description
-      }
-      return item;
-    }))
-    setNfts(items);
-    setLoading('loaded');
-  }
-
-  const buyNft = async (NftTokenId) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    const contract = new ethers.Contract(nftMarketAddress, Market.abi, signer);
-    const nft = await contract.getItemById(NftTokenId);
-    console.log(nft);
-    const totalPay = nft.price.add(nft.comission);
-
-    const transaction = await contract.createMarketSale(nftAddress, nft.tokenId, {value: totalPay});
-    await transaction.wait();
-    loadNFTs();
-
-  }
-
-  if(loading === 'loaded' && !nfts.length) return (
-    <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>
-  )
-
   return (
-    <div className='flex justify-center'>
-      <div className='px-4' style={{maxWidth: '1600px'}}>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4'>
-          {
-            nfts.map((nft, i) => (
-              <div key={i} className='border shadow rounded-xl overflow-hidden'>
-                <img src={nft.image} />
-                <div className='p-4'>
-                  <p style={{height: '64px'}} className='text-2xl font-semibold '>
-                    {nft.name}
-                  </p>
-                  <div style={{height: '64px', overflow: 'hidden'}}>
-                    <p className='text-gray-400'>{nft.description}</p>
-                  </div>
-                </div>
-                <div className='p-4 bg-black'>
-                  <p className='text-2xl mb-4 font-bold text-white'>{nft.price} ETH</p>
-                  <button className='w-full bg-pink-500 text-white font-bold py-2 px-12 rounded'
-                    onClick={()=> buyNft(nft.tokenId)}>
-                      Buy
-                  </button>
-                </div>
-              </div>
-            ))
-          }
+    <div className="container pt-24 md:pt-36 mx-auto flex flex-wrap flex-col md:flex-row items-center">
+        {/* Left Col */}
+        <div className="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
+          <h1 className="my-4 text-3xl md:text-5xl text-white opacity-75 font-bold leading-tight text-center md:text-left">
+            Main
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500">
+              Hero Message
+            </span>
+            to sell yourself!
+          </h1>
+          <p className="leading-normal text-base md:text-2xl mb-8 text-center md:text-left">
+            Sub-hero message, not too long and not too short. Make it just right!
+          </p>
+
+          <form className="bg-gray-900 opacity-75 w-full shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+            <div className="mb-4">
+              <label className="block text-blue-300 py-2 font-bold mb-2" for="emailaddress">
+                Signup for our newsletter
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full p-3 text-gray-700 leading-tight focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
+                id="emailaddress"
+                type="text"
+                placeholder="you@somewhere.com"
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-4">
+              <button
+                className="bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
+                type="button"
+              >
+                Sign Up
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
-    </div>
+
+        {/* Right Col */}
+        <div className="w-full xl:w-3/5 p-12 overflow-hidden">
+          <img className="mx-auto w-full md:w-4/5 transform transition hover:scale-110 duration-700 ease-in-out rounded-2xl" 
+                src="./macbook.svg" />
+        </div>
+    </div>  
   )
 }
